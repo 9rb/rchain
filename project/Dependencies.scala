@@ -7,7 +7,7 @@ object Dependencies {
   val circeVersion      = "0.13.0"
   val enumeratumVersion = "1.5.13"
   val http4sVersion     = "0.21.4"
-  val kamonVersion      = "1.1.5"
+  val kamonVersion      = "2.1.6"
   val catsVersion       = "2.1.0"
   val catsEffectVersion = "2.0.0"
   val catsMtlVersion    = "0.7.0"
@@ -43,10 +43,10 @@ object Dependencies {
   // see https://jitpack.io/#rchain/kalium
   val kalium              = "com.github.rchain"           % "kalium"                    % "0.8.1"
   val kamonCore           = "io.kamon"                   %% "kamon-core"                % kamonVersion
-  val kamonSystemMetrics  = "io.kamon"                   %% "kamon-system-metrics"      % "1.0.1"
+  val kamonSystemMetrics  = "io.kamon"                   %% "kamon-system-metrics"      % "2.0.2"
   val kamonPrometheus     = "io.kamon"                   %% "kamon-prometheus"          % "1.1.2"
-  val kamonInfluxDb       = "io.kamon"                   %% "kamon-influxdb"            % "1.0.2"
-  val kamonZipkin         = "io.kamon"                   %% "kamon-zipkin"              % "1.0.0"
+  val kamonInfluxDb       = "io.kamon"                   %% "kamon-influxdb"            % "1.0.3"
+  val kamonZipkin         = "io.kamon"                   %% "kamon-zipkin"              % "2.0.2"
   val lightningj          = ("org.lightningj"             % "lightningj"                % "0.10.0-Beta")
     .intransitive() //we only use the lib for one util class (org.lightningj.util.ZBase32) that has no dependencies
   val lmdbjava            = "org.lmdbjava"                % "lmdbjava"                  % "0.7.0"
@@ -64,10 +64,10 @@ object Dependencies {
   val scalapbRuntimegGrpc = "com.thesamet.scalapb"       %% "scalapb-runtime-grpc"      % scalapb.compiler.Version.scalapbVersion
   val grpcNetty           = "io.grpc"                     % "grpc-netty"                % scalapb.compiler.Version.grpcJavaVersion
   val grpcServices        = "io.grpc"                     % "grpc-services"             % scalapb.compiler.Version.grpcJavaVersion
-  val nettyBoringSsl      = "io.netty"                    % "netty-tcnative-boringssl-static" % "2.0.8.Final"
-  val nettyTcnative       = "io.netty"                    % "netty-tcnative"            % "2.0.8.Final" classifier osClassifier
-  val nettyTcnativeLinux  = "io.netty"                    % "netty-tcnative"            % "2.0.8.Final" classifier "linux-x86_64"
-  val nettyTcnativeFedora = "io.netty"                    % "netty-tcnative"            % "2.0.8.Final" classifier "linux-x86_64-fedora"
+  val nettyBoringSsl      = "io.netty"                    % "netty-tcnative-boringssl-static" % "2.0.34.Final"
+  val nettyTcnative       = "io.netty"                    % "netty-tcnative"            % "2.0.34.Final" classifier osClassifier
+  val nettyTcnativeLinux  = "io.netty"                    % "netty-tcnative"            % "2.0.34.Final" classifier "linux-x86_64"
+  val nettyTcnativeFedora = "io.netty"                    % "netty-tcnative"            % "2.0.34.Final" classifier "linux-x86_64-fedora"
   val scalatest           = "org.scalatest"              %% "scalatest"                 % "3.0.5" % "test"
   val scallop             = "org.rogach"                 %% "scallop"                   % "3.1.4"
   val scodecCore          = "org.scodec"                 %% "scodec-core"               % "1.10.3"
