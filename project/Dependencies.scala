@@ -11,7 +11,7 @@ object Dependencies {
   val catsVersion       = "2.1.0"
   val catsEffectVersion = "2.0.0"
   val catsMtlVersion    = "0.7.0"
-  val slf4jVersion      = "1.7.25"
+  val slf4jVersion      = "1.7.30"
 
   // format: off
   val bouncyProvCastle    = "org.bouncycastle"           % "bcprov-jdk15on"             % "1.66"
@@ -52,7 +52,7 @@ object Dependencies {
   val lmdbjava            = "org.lmdbjava"                % "lmdbjava"                  % "0.7.0"
   val logbackClassic      = "ch.qos.logback"              % "logback-classic"           % "1.2.3"
   val lz4                 = "org.lz4"                     % "lz4-java"                  % "1.7.1"
-  val monix               = "io.monix"                   %% "monix"                     % "3.1.0"
+  val monix               = "io.monix"                   %% "monix"                     % "3.2.2"
   val scalaLogging        = "com.typesafe.scala-logging" %% "scala-logging"             % "3.9.2"
   val scalaUri            = "io.lemonlabs"               %% "scala-uri"                 % "1.1.5"
   val scalacheck          = "org.scalacheck"             %% "scalacheck"                % "1.14.3"
@@ -101,13 +101,13 @@ object Dependencies {
     "org.scala-lang.modules"   %% "scala-xml"              % "1.1.0",
     "com.google.code.findbugs" % "jsr305"                  % "3.0.2",
     "com.google.errorprone"    % "error_prone_annotations" % "2.1.2",
-    "com.github.jnr"           % "jnr-ffi"                 % "2.1.7"
+    "com.github.jnr"           % "jnr-ffi"                 % "2.1.16"
   )
 
   private val kindProjector = compilerPlugin("org.spire-math" %% "kind-projector" % "0.9.10")
 
   private val macroParadise = compilerPlugin(
-    "org.scalamacros" % "paradise" % "2.1.0" cross CrossVersion.full
+    "org.scalamacros" % "paradise" % "2.1.1" cross CrossVersion.full
   )
 
   private val testing = Seq(scalactic, scalatest, scalacheck)
