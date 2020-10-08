@@ -49,7 +49,7 @@ object Dependencies {
   val kamonZipkin         = "io.kamon"                   %% "kamon-zipkin"              % "1.0.0"
   val lightningj          = ("org.lightningj"             % "lightningj"                % "0.5.2-Beta")
     .intransitive() //we only use the lib for one util class (org.lightningj.util.ZBase32) that has no dependencies
-  val lmdbjava            = "org.lmdbjava"                % "lmdbjava"                  % "0.6.3"
+  val lmdbjava            = "org.lmdbjava"                % "lmdbjava"                  % "0.8.1"
   val logbackClassic      = "ch.qos.logback"              % "logback-classic"           % "1.2.3"
   val lz4                 = "org.lz4"                     % "lz4-java"                  % "1.5.1"
   val monix               = "io.monix"                   %% "monix"                     % "3.1.0"
@@ -64,11 +64,11 @@ object Dependencies {
   val scalapbRuntimegGrpc = "com.thesamet.scalapb"       %% "scalapb-runtime-grpc"      % scalapb.compiler.Version.scalapbVersion
   val grpcNetty           = "io.grpc"                     % "grpc-netty"                % scalapb.compiler.Version.grpcJavaVersion
   val grpcServices        = "io.grpc"                     % "grpc-services"             % scalapb.compiler.Version.grpcJavaVersion
-  val nettyBoringSsl      = "io.netty"                    % "netty-tcnative-boringssl-static" % "2.0.8.Final"
-  val nettyTcnative       = "io.netty"                    % "netty-tcnative"            % "2.0.8.Final" classifier osClassifier
-  val nettyTcnativeLinux  = "io.netty"                    % "netty-tcnative"            % "2.0.8.Final" classifier "linux-x86_64"
-  val nettyTcnativeFedora = "io.netty"                    % "netty-tcnative"            % "2.0.8.Final" classifier "linux-x86_64-fedora"
-  val scalatest           = "org.scalatest"              %% "scalatest"                 % "3.0.9" % "test"
+  val nettyBoringSsl      = "io.netty"                    % "netty-tcnative-boringssl-static" % "2.0.10.Final"
+  val nettyTcnative       = "io.netty"                    % "netty-tcnative"            % "2.0.10.Final" classifier osClassifier
+  val nettyTcnativeLinux  = "io.netty"                    % "netty-tcnative"            % "2.0.10.Final" classifier "linux-x86_64"
+  val nettyTcnativeFedora = "io.netty"                    % "netty-tcnative"            % "2.0.10.Final" classifier "linux-x86_64-fedora"
+  val scalatest           = "org.scalatest"              %% "scalatest"                 % "3.0.5" % "test"
   val scallop             = "org.rogach"                 %% "scallop"                   % "3.1.4"
   val scodecCore          = "org.scodec"                 %% "scodec-core"               % "1.10.3"
   val scodecCats          = "org.scodec"                 %% "scodec-cats"               % "0.8.0"
