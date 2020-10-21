@@ -5,7 +5,7 @@ import java.nio.ByteBuffer
 import cats.implicits._
 import cats.effect.Sync
 import coop.rchain.shared.Resources.withResource
-import org.lmdbjava.{CursorIterator, Dbi, Env, Txn}
+import org.lmdbjava.{CursorIterable, Dbi, Env, Txn}
 
 import scala.collection.JavaConverters._
 import scala.util.control.NonFatal
@@ -42,6 +42,14 @@ final case class LMDBStore[F[_]: Sync](env: Env[ByteBuffer], dbi: Dbi[ByteBuffer
       dbi.get(txn, key)
     }.map(v => Option(v))
 
+  def get[V](key: Seq[ByteBuffer], fromBuffer: ByteBuffer => V): F[Seq[Option[V]]] =
+    withReadTxnF { txn =>
+      key.map { k =>
+        val v = Option(dbi.get(txn, k))
+        v.map(fromBuffer)
+      }
+    }
+
   @SuppressWarnings(Array("org.wartremover.warts.Throw"))
   def put(key: ByteBuffer, value: ByteBuffer): F[Unit] =
     withWriteTxnF { txn =>
@@ -61,6 +69,17 @@ final case class LMDBStore[F[_]: Sync](env: Env[ByteBuffer], dbi: Dbi[ByteBuffer
       }
     }
 
+  @SuppressWarnings(Array("org.wartremover.warts.Throw"))
+  def put[T](kvPairs: Seq[(ByteBuffer, T)], toBuffer: T => ByteBuffer): F[Unit] =
+    withWriteTxnF { txn =>
+      kvPairs.foreach {
+        case (key, value) =>
+          if (!dbi.put(txn, key, toBuffer(value))) {
+            throw new RuntimeException("was not able to put data")
+          }
+      }
+    }
+
   def delete(keys: List[ByteBuffer]): F[Int] =
     withWriteTxnF { txn =>
       keys.foldLeft(0) { (deletedCount, key) =>
@@ -68,10 +87,10 @@ final case class LMDBStore[F[_]: Sync](env: Env[ByteBuffer], dbi: Dbi[ByteBuffer
       }
     }
 
-  def iterate[R](f: Iterator[CursorIterator.KeyVal[ByteBuffer]] => R): F[R] =
+  def iterate[R](f: Iterator[CursorIterable.KeyVal[ByteBuffer]] => R): F[R] =
     withReadTxnF { txn =>
       withResource(dbi.iterate(txn)) { iterator =>
-        f(iterator.asScala)
+        f(iterator.iterator.asScala)
       }
     }
 
