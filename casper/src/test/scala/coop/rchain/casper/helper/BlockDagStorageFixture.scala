@@ -27,6 +27,7 @@ import coop.rchain.shared.PathOps.RichPath
 import monix.eval.Task
 import monix.execution.Scheduler
 import org.lmdbjava.{Env, EnvFlags}
+import org.lmdbjava.ByteBufferProxy.PROXY_SAFE
 import org.scalatest.{BeforeAndAfter, Suite}
 
 trait BlockDagStorageFixture extends BeforeAndAfter { self: Suite =>
@@ -51,7 +52,7 @@ trait BlockDagStorageFixture extends BeforeAndAfter { self: Suite =>
       runtime                <- Resources.mkRuntimeManagerAt[Task](paths.rspaceDir)()
     } yield (blockStore, indexedBlockDagStorage, runtime)
 
-    resource.use[R] { case (b, d, r) => f(b)(d)(r) }.unsafeRunSync
+    resource.use[Task, R] { case (b, d, r) => f(b)(d)(r) }.unsafeRunSync
   }
 
   def withStorage[R](f: BlockStore[Task] => IndexedBlockDagStorage[Task] => Task[R]): R = {
@@ -112,7 +113,7 @@ object BlockDagStorageTestFixture {
       flags: List[EnvFlags] = List(EnvFlags.MDB_NOTLS)
   ): Env[ByteBuffer] =
     Env
-      .create()
+      .create(PROXY_SAFE)
       .setMapSize(mapSize)
       .setMaxDbs(8)
       .setMaxReaders(126)
