@@ -54,7 +54,7 @@ lazy val projectSettings = Seq(
     Wart.AnyVal
   ),
   scalafmtOnCompile := sys.env.get("CI").isEmpty, // disable in CI environments
-  scapegoatVersion in ThisBuild := "1.3.8",
+  scapegoatVersion in ThisBuild := "1.4.6",
   testOptions in Test += Tests.Argument("-oD"), //output test durations
   dependencyOverrides ++= Seq(
     "io.kamon" %% "kamon-core" % kamonVersion
@@ -160,6 +160,7 @@ lazy val casper = (project in file("casper"))
     name := "casper",
     libraryDependencies ++= commonDependencies ++ protobufLibDependencies ++ Seq(
       catsCore,
+      catsRetry,
       catsMtl,
       monix,
       scalacheck % "slowcooker"
@@ -259,6 +260,7 @@ lazy val node = (project in file("node"))
       apiServerDependencies ++ commonDependencies ++ kamonDependencies ++ protobufDependencies ++ Seq(
         catsCore,
         catsTagless,
+        catsRetry,
         grpcNetty,
         grpcServices,
         jline,
@@ -357,7 +359,7 @@ lazy val node = (project in file("node"))
     /* Debian */
     debianPackageDependencies in Debian ++= Seq(
       "openjdk-11-jre-headless",
-      "openssl(>= 1.0.2g) | openssl(>= 1.1.0f)", //ubuntu & debian
+      "openssl(>= 1.0.2g) | openssl(>= 1.1.1h)", //ubuntu & debian
       "bash (>= 2.05a-11)"
     ),
     /* Redhat */
@@ -449,7 +451,6 @@ lazy val blockStorage = (project in file("block-storage"))
     name := "block-storage",
     version := "0.0.1-SNAPSHOT",
     libraryDependencies ++= commonDependencies ++ protobufLibDependencies ++ Seq(
-      lmdbjava,
       catsCore,
       catsEffect,
       catsMtl

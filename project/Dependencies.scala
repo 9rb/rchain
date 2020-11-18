@@ -6,9 +6,9 @@ object Dependencies {
 
   val circeVersion      = "0.13.0"
   val enumeratumVersion = "1.5.13"
-  val http4sVersion     = "0.21.4"
+  val http4sVersion     = "0.21.9"
   val kamonVersion      = "1.1.5"
-  val catsVersion       = "2.1.1"
+  val catsVersion       = "2.2.0"
   val catsEffectVersion = "2.2.0"
   val catsMtlVersion    = "0.7.1"
   val slf4jVersion      = "1.7.25"
@@ -23,7 +23,7 @@ object Dependencies {
   val catsEffectLawsTest  = "org.typelevel"              %% "cats-effect-laws"          % catsEffectVersion % "test"
   val catsMtl             = "org.typelevel"              %% "cats-mtl-core"             % catsMtlVersion
   val catsMtlLawsTest     = "org.typelevel"              %% "cats-mtl-laws"             % catsMtlVersion % "test"
-  val catsTagless         = "org.typelevel"              %% "cats-tagless-macros"       % "0.11"
+  val catsTagless         = "org.typelevel"              %% "cats-tagless-macros"       % "0.12"
   val disciplineCore      = "org.typelevel"              %% "discipline-core"           % "1.0.3"
   val circeCore           = "io.circe"                   %% "circe-core"                % circeVersion
   val circeGeneric        = "io.circe"                   %% "circe-generic"             % circeVersion
@@ -51,8 +51,8 @@ object Dependencies {
     .intransitive() //we only use the lib for one util class (org.lightningj.util.ZBase32) that has no dependencies
   val lmdbjava            = "org.lmdbjava"                % "lmdbjava"                  % "0.8.1"
   val logbackClassic      = "ch.qos.logback"              % "logback-classic"           % "1.2.3"
-  val lz4                 = "org.lz4"                     % "lz4-java"                  % "1.7.1"
-  val monix               = "io.monix"                   %% "monix"                     % "3.2.2"
+  val lz4                 = "org.lz4"                     % "lz4-java"                  % "1.5.1"
+  val monix               = "io.monix"                   %% "monix"                     % "3.3.0"
   val scalaLogging        = "com.typesafe.scala-logging" %% "scala-logging"             % "3.9.2"
   val scalaUri            = "io.lemonlabs"               %% "scala-uri"                 % "1.1.5"
   val scalacheck          = "org.scalacheck"             %% "scalacheck"                % "1.14.3"
@@ -72,7 +72,7 @@ object Dependencies {
   val scallop             = "org.rogach"                 %% "scallop"                   % "3.1.4"
   val scodecCore          = "org.scodec"                 %% "scodec-core"               % "1.10.3"
   val scodecCats          = "org.scodec"                 %% "scodec-cats"               % "0.8.0"
-  val scodecBits          = "org.scodec"                 %% "scodec-bits"               % "1.1.18"
+  val scodecBits          = "org.scodec"                 %% "scodec-bits"               % "1.1.20"
   val shapeless           = "com.chuusai"                %% "shapeless"                 % "2.3.3"
   val magnolia            = "com.propensive"             %% "magnolia"                  % "0.12.0"
   val weupnp              = "org.bitlet"                  % "weupnp"                    % "0.1.4"
@@ -82,7 +82,8 @@ object Dependencies {
   val slf4j               = "org.slf4j"                   % "slf4j-api"                 % slf4jVersion
   val julToSlf4j          = "org.slf4j"                   % "jul-to-slf4j"              % slf4jVersion
   // format: on
-  val pureconfig          = "com.github.pureconfig"       %% "pureconfig"               % "0.13.0"
+  val pureconfig          = "com.github.pureconfig"       %% "pureconfig"               % "0.14.0"
+  val catsRetry          ="com.github.cb372"             %% "cats-retry"               % "2.0.0"
 
   val overrides = Seq(
     catsCore,
