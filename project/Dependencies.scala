@@ -54,7 +54,7 @@ object Dependencies {
     .intransitive() //we only use the lib for one util class (org.lightningj.util.ZBase32) that has no dependencies
   val lmdbjava            = "org.lmdbjava"                % "lmdbjava"                  % "0.8.1"
   val logbackClassic      = "ch.qos.logback"              % "logback-classic"           % "1.2.3"
-  val logstashLogback     = "net.logstash.logback"        % "logstash-logback-encoder"  % "5.3"
+  val logstashLogback     = "net.logstash.logback"        % "logstash-logback-encoder"  % "6.4"
   val lz4                 = "org.lz4"                     % "lz4-java"                  % "1.5.1"
   val magnolia            = "com.propensive"             %% "magnolia"                  % "0.12.0"
   val monix               = "io.monix"                   %% "monix"                     % "3.3.0"
