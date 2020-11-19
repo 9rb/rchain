@@ -11,13 +11,13 @@ import monix.eval.Task
 import monix.execution.Scheduler
 import org.scalacheck.Gen
 import org.scalatest._
-import org.scalatest.prop.GeneratorDrivenPropertyChecks
+import org.scalatestplus.scalacheck.ScalaCheckDrivenPropertyChecks
 
 class PacketStoreRestoreSpec
     extends FunSpec
     with Matchers
     with BeforeAndAfterEach
-    with GeneratorDrivenPropertyChecks {
+    with ScalaCheckDrivenPropertyChecks {
 
   import PacketOps._
 

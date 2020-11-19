@@ -23,17 +23,17 @@ import coop.rchain.shared.PathOps._
 import monix.eval.Task
 import monix.execution.Scheduler
 import org.scalatest._
-import org.scalatest.prop.GeneratorDrivenPropertyChecks
 import scodec.codecs._
 
 import scala.util.Random
+import org.scalatestplus.scalacheck.ScalaCheckDrivenPropertyChecks
 
 trait BlockDagStorageTest
     extends FlatSpecLike
     with Matchers
     with OptionValues
     with EitherValues
-    with GeneratorDrivenPropertyChecks
+    with ScalaCheckDrivenPropertyChecks
     with BeforeAndAfterAll {
   val scheduler = Scheduler.fixedPool("block-dag-storage-test-scheduler", 4)
 

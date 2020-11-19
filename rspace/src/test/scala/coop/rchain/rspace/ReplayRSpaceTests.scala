@@ -31,6 +31,7 @@ import scala.util.Random.shuffle
 import org.lmdbjava.EnvFlags
 
 import scala.collection.SortedSet
+import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
 
 object SchedulerPools {
   implicit val global = Scheduler.fixedPool("GlobalPool", 20)
@@ -1231,7 +1232,7 @@ trait ReplayRSpaceTestsBase[C, P, A, K]
     extends FlatSpec
     with Matchers
     with OptionValues
-    with PropertyChecks {
+    with ScalaCheckPropertyChecks {
   val logger = Logger(this.getClass.getName.stripSuffix("$"))
 
   implicit override val generatorDrivenConfig =

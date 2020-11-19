@@ -21,17 +21,17 @@ import monix.execution.Scheduler
 import monix.execution.Scheduler.Implicits.global
 import org.scalactic.anyvals.PosInt
 import org.scalatest._
-import org.scalatest.prop.GeneratorDrivenPropertyChecks
 import scala.language.higherKinds
 
 import coop.rchain.metrics.Metrics
+import org.scalatestplus.scalacheck.ScalaCheckDrivenPropertyChecks
 
 trait BlockStoreTest
     extends FlatSpecLike
     with Matchers
     with OptionValues
     with EitherValues
-    with GeneratorDrivenPropertyChecks
+    with ScalaCheckDrivenPropertyChecks
     with BeforeAndAfterAll {
 
   implicit override val generatorDrivenConfig: PropertyCheckConfiguration =

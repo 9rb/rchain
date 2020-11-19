@@ -7,7 +7,6 @@ import coop.rchain.rspace.examples.StringExamples.{Pattern, StringsCaptor}
 import coop.rchain.rspace.internal._
 import coop.rchain.rspace.test.ArbitraryInstances._
 import coop.rchain.rspace.Blake2b256Hash
-import org.scalatest.prop.GeneratorDrivenPropertyChecks
 import org.scalatest.{FlatSpec, Matchers}
 import scodec.bits.{BitVector, ByteVector}
 import scodec.codecs.{ignore => cignore, _}
@@ -17,8 +16,9 @@ import coop.rchain.rspace.util
 import coop.rchain.shared.Serialize
 
 import scala.collection.immutable.Seq
+import org.scalatestplus.scalacheck.ScalaCheckDrivenPropertyChecks
 
-class EventTests extends FlatSpec with Matchers with GeneratorDrivenPropertyChecks {
+class EventTests extends FlatSpec with Matchers with ScalaCheckDrivenPropertyChecks {
 
   "A Produce" should "contain the expected hash" in {
     forAll { (channel: String, data: String, persist: Boolean) =>

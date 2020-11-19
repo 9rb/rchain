@@ -11,15 +11,15 @@ import coop.rchain.models.{New, _}
 import monix.eval.Coeval
 import org.scalacheck.Arbitrary
 import org.scalatest._
-import org.scalatest.prop.PropertyChecks
 
 import scala.collection.immutable.BitSet
+import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
 
 object SortTest {
   def sort[T: Sortable](t: T) = Sortable[T].sortMatch[Coeval](t).value
 }
 
-class ScoredTermSpec extends FlatSpec with PropertyChecks with Matchers {
+class ScoredTermSpec extends FlatSpec with ScalaCheckPropertyChecks with Matchers {
 
   behavior of "ScoredTerm"
 

@@ -74,7 +74,7 @@ object Dependencies {
   val nettyTcnative       = "io.netty"                    % "netty-tcnative"            % "2.0.31.Final" classifier osClassifier
   val nettyTcnativeLinux  = "io.netty"                    % "netty-tcnative"            % "2.0.31.Final" classifier "linux-x86_64"
   val nettyTcnativeFedora = "io.netty"                    % "netty-tcnative"            % "2.0.31.Final" classifier "linux-x86_64-fedora"
-  val scalatest           = "org.scalatest"              %% "scalatest"                 % "3.0.5" % "test"
+  val scalatest           = "org.scalatest"              %% "scalatest"                 % "3.0.9" % "test"
   val scallop             = "org.rogach"                 %% "scallop"                   % "3.1.4"
   val scodecCore          = "org.scodec"                 %% "scodec-core"               % "1.10.3"
   val scodecCats          = "org.scodec"                 %% "scodec-cats"               % "0.8.0"

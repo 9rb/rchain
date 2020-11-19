@@ -3,7 +3,6 @@ package coop.rchain.rspace.history
 import coop.rchain.rspace.Blake2b256Hash
 import coop.rchain.rspace.examples.StringExamples.{Pattern, StringsCaptor}
 import coop.rchain.rspace.internal.Datum
-import org.scalatest.prop.GeneratorDrivenPropertyChecks
 import org.scalatest.{FlatSpec, Matchers}
 import coop.rchain.rspace.util.stringCodec
 import scodec.Codec
@@ -11,8 +10,9 @@ import coop.rchain.rspace.examples.StringExamples._
 import coop.rchain.rspace.examples.StringExamples.implicits._
 import coop.rchain.rspace.internal._
 import coop.rchain.rspace.test.ArbitraryInstances._
+import org.scalatestplus.scalacheck.ScalaCheckDrivenPropertyChecks
 
-class EncodingSpec extends FlatSpec with Matchers with GeneratorDrivenPropertyChecks {
+class EncodingSpec extends FlatSpec with Matchers with ScalaCheckDrivenPropertyChecks {
 
   type Continuation = WaitingContinuation[Pattern, StringsCaptor]
   type Join         = Seq[String]

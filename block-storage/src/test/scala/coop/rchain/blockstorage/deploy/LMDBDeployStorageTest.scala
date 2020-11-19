@@ -12,12 +12,12 @@ import monix.eval.Task
 import monix.execution.Scheduler
 import org.scalacheck.Gen
 import org.scalatest.{BeforeAndAfterAll, FlatSpecLike, Matchers}
-import org.scalatest.prop.GeneratorDrivenPropertyChecks
+import org.scalatestplus.scalacheck.ScalaCheckDrivenPropertyChecks
 
 class LMDBDeployStorageTest
     extends FlatSpecLike
     with Matchers
-    with GeneratorDrivenPropertyChecks
+    with ScalaCheckDrivenPropertyChecks
     with BeforeAndAfterAll {
 
   val scheduler = Scheduler.fixedPool("lmdb-deploy-storage-test-scheduler", 4)

@@ -3,8 +3,9 @@ package coop.rchain.crypto.codec
 import org.scalacheck.Shrink
 import org.scalatest._
 import prop._
+import org.scalatestplus.scalacheck.ScalaCheckDrivenPropertyChecks
 
-class Base16Spec extends PropSpec with GeneratorDrivenPropertyChecks with Matchers {
+class Base16Spec extends PropSpec with ScalaCheckDrivenPropertyChecks with Matchers {
   implicit def noShrink[T]: Shrink[T] = Shrink.shrinkAny
 
   property("decode after encode returns the original input") {

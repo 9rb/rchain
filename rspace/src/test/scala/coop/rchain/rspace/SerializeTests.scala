@@ -6,9 +6,10 @@ import coop.rchain.rspace.test.ArbitraryInstances._
 import coop.rchain.rspace.test.roundTripCodec
 import org.scalacheck.Prop
 import org.scalactic.anyvals.PosInt
-import org.scalatest.prop.{Checkers, Configuration}
+import org.scalatest.prop.Configuration
 import org.scalatest.{FlatSpec, Matchers}
 import scodec.DecodeResult
+import org.scalatestplus.scalacheck.Checkers
 
 class SerializeTests extends FlatSpec with Matchers with Checkers with Configuration {
 
