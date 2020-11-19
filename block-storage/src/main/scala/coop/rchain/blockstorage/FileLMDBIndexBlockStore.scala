@@ -28,6 +28,7 @@ import coop.rchain.shared.ByteStringOps._
 import coop.rchain.shared.{AtomicMonadState, Log}
 import monix.execution.atomic.AtomicAny
 import org.lmdbjava.DbiFlags.MDB_CREATE
+import org.lmdbjava.ByteBufferProxy.PROXY_SAFE
 import org.lmdbjava._
 
 import scala.util.matching.Regex
@@ -114,7 +115,7 @@ class FileLMDBIndexBlockStore[F[_]: Monad: Sync: RaiseIOError: Log] private (
   override def get(blockHash: BlockHash): F[Option[BlockMessage]] =
     lock.withPermit(
       for {
-        indexEntryBytesOpt     <- index.get(blockHash.toDirectByteBuffer)
+        indexEntryBytesOpt     <- index.get_WARNING(blockHash.toDirectByteBuffer)
         indexEntryOpt          = indexEntryBytesOpt.map(IndexEntry.load)
         maybeBlockMessageProto <- indexEntryOpt.traverse(readBlockMessage)
       } yield maybeBlockMessageProto >>= (bmp => BlockMessage.from(bmp).toOption)
@@ -326,26 +327,4 @@ object FileLMDBIndexBlockStore {
     } yield result
   }
 
-  def create[F[_]: Monad: Concurrent: Sync: Log: Metrics](
-      config: Config
-  ): F[StorageErr[BlockStore[F]]] =
-    for {
-      notExists <- Sync[F].delay(Files.notExists(config.indexPath))
-      _         <- if (notExists) Sync[F].delay(Files.createDirectories(config.indexPath)) else ().pure[F]
-      env <- Sync[F].delay {
-              val flags = if (config.noTls) List(EnvFlags.MDB_NOTLS) else List.empty
-              Env
-                .create()
-                .setMapSize(config.mapSize)
-                .setMaxDbs(config.maxDbs)
-                .setMaxReaders(config.maxReaders)
-                .open(config.indexPath.toFile, flags: _*)
-            }
-      result <- create[F](
-                 env,
-                 config.storagePath,
-                 config.approvedBlockPath,
-                 config.checkpointsDirPath
-               )
-    } yield result
 }

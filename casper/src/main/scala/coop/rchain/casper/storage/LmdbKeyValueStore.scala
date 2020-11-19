@@ -64,13 +64,17 @@ final case class LmdbKeyValueStore[F[_]: Sync](
     }
 
   // PUT
-  override def put[T](kvPairs: Seq[(ByteBuffer, T)], toBuffer: T => ByteBuffer): F[Unit] =
+  override def put[T](kvPairs: Seq[(ByteBuffer, T)], toBuffer: T => ByteBuffer): F[Unit] = {
+    // Buffers for key and value created outside of transaction.
+    // Why this helps (or why corruption happens) is not clear but this code will prevent corruption of the database.
+    val byteBuffers = kvPairs.map { case (key, value) => (key, toBuffer(value)) }
     withWriteTxn { (txn, dbi) =>
-      kvPairs.foreach {
+      byteBuffers.foreach {
         case (key, value) =>
-          if (dbi.put(txn, key, toBuffer(value))) () else ()
+          if (dbi.put(txn, key, value)) () else ()
       }
     }
+  }
 
   // DELETE
   override def delete(keys: Seq[ByteBuffer]): F[Int] =
@@ -83,7 +87,7 @@ final case class LmdbKeyValueStore[F[_]: Sync](
     withReadTxn { (txn, dbi) =>
       withResource(dbi.iterate(txn)) { iterator =>
         import scala.collection.JavaConverters._
-        f(iterator.asScala.map(c => (c.key, c.`val`)))
+        f(iterator.iterator.asScala.map(c => (c.key, c.`val`)))
       }
     }
 }
