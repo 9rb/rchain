@@ -7,7 +7,7 @@ import scala.concurrent.duration._
 
 import cats._
 import cats.effect.Timer
-import cats.effect.concurrent.MVar
+import cats.effect.concurrent.MVar2
 import cats.implicits._
 
 import coop.rchain.catscontrib.ski._
@@ -82,7 +82,7 @@ abstract class TransportLayerRuntime[F[_]: Monad: Timer, E <: Environment] {
             local     = e1.peer
             remote    = e2.peer
             cb        <- createDispatcherCallback
-            server <- remoteTls.receive(
+            server <- remoteTls.handleReceive(
                        protocolDispatcher.dispatch(remote, cb),
                        streamDispatcher.dispatch(remote, cb)
                      )
@@ -163,11 +163,11 @@ abstract class TransportLayerRuntime[F[_]: Monad: Timer, E <: Environment] {
             cbl        <- createDispatcherCallback
             cb1        <- createDispatcherCallback
             cb2        <- createDispatcherCallback
-            server1 <- remoteTls1.receive(
+            server1 <- remoteTls1.handleReceive(
                         protocolDispatcher.dispatch(remote1, cb1),
                         streamDispatcher.dispatch(remote1, cb1)
                       )
-            server2 <- remoteTls2.receive(
+            server2 <- remoteTls2.handleReceive(
                         protocolDispatcher.dispatch(remote2, cb2),
                         streamDispatcher.dispatch(remote2, cb2)
                       )
@@ -219,7 +219,7 @@ trait Environment {
   def port: Int
 }
 
-final class DispatcherCallback[F[_]: Functor](state: MVar[F, Unit]) {
+final class DispatcherCallback[F[_]: Functor](state: MVar2[F, Unit]) {
   def notifyThatDispatched(): F[Unit] = state.tryPut(()).void
   def waitUntilDispatched(): F[Unit]  = state.take
 }

@@ -117,7 +117,8 @@ class TestNode[F[_]](
   implicit val commUtil: CommUtil[F]             = CommUtil.of[F]
   implicit val blockRetriever: BlockRetriever[F] = BlockRetriever.of[F]
 
-  val blocksInProcessing = Ref.unsafe[F, Set[BlockHash]](Set.empty)
+  val blockProcessingState =
+    Ref.unsafe[F, BlockProcessingState](BlockProcessingState(Set.empty, Set.empty))
 
   implicit val casperEff = new MultiParentCasperImpl[F](
     validatorId,
@@ -126,7 +127,7 @@ class TestNode[F[_]](
     shardId,
     finalizationRate,
     blockProcessingLock,
-    blocksInProcessing
+    blockProcessingState
   )
 
   val engine                             = new Running(casperEff, approvedBlock, validatorId, ().pure[F])
@@ -164,7 +165,7 @@ class TestNode[F[_]](
       Created(block)    = createBlockResult
     } yield block
 
-  def receive(): F[Unit] = tls.receive(p => handle[F](p), kp(().pure[F])).void
+  def receive(): F[Unit] = tls.handleReceive(p => handle[F](p), kp(().pure[F])).void
 
   val maxSyncAttempts = 10
   def syncWith(nodes: Seq[TestNode[F]]): F[Unit] = {
@@ -431,23 +432,6 @@ object TestNode {
              )
     } yield node
   }
-
-  def makeBlockDagFileStorageConfig(blockDagDir: Path) =
-    BlockDagFileStorage.Config(
-      blockDagDir.resolve("latest-messages-data"),
-      blockDagDir.resolve("latest-messages-crc"),
-      blockDagDir.resolve("block-metadata-data"),
-      blockDagDir.resolve("block-metadata-crc"),
-      blockDagDir.resolve("equivocations-tracker-data"),
-      blockDagDir.resolve("equivocations-tracker-crc"),
-      blockDagDir.resolve("invalid-blocks-data"),
-      blockDagDir.resolve("invalid-blocks-crc"),
-      blockDagDir.resolve("block-hashes-by-deploy-data"),
-      blockDagDir.resolve("block-hashes-by-deploy-crc"),
-      blockDagDir.resolve("checkpoints"),
-      blockDagDir.resolve("block-number-index"),
-      mapSize
-    )
 
   private def peerNode(name: String, port: Int): PeerNode =
     PeerNode(NodeIdentifier(name.getBytes), endpoint(port))
