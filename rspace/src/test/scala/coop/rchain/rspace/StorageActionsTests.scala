@@ -14,7 +14,7 @@ import scodec.Codec
 import monix.eval.Task
 
 import scala.collection.SortedSet
-import org.scalatestplus.scalacheck.{ Checkers, ScalaCheckDrivenPropertyChecks }
+import org.scalatestplus.scalacheck.{Checkers, ScalaCheckDrivenPropertyChecks}
 
 trait StorageActionsTests[F[_]]
     extends StorageTestsBase[F, String, Pattern, String, StringsCaptor]
