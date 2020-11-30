@@ -63,7 +63,7 @@ object Dependencies {
   val scalaUri            = "io.lemonlabs"               %% "scala-uri"                 % "3.0.0"
   val scalacheck          = "org.scalacheck"             %% "scalacheck"                % "1.15.1"
   val scalacheckShapeless = "com.github.alexarchambault" %% "scalacheck-shapeless_1.14" % "1.2.5" % "test"
-  val scalactic           = "org.scalactic"              %% "scalactic"                 % "3.0.5" % "test"
+  val scalactic           = "org.scalactic"              %% "scalactic"                 % "3.0.9" % "test"
   val scalapbCompiler     = "com.thesamet.scalapb"       %% "compilerplugin"            % scalapb.compiler.Version.scalapbVersion
   val scalapbRuntime      = "com.thesamet.scalapb"       %% "scalapb-runtime"           % scalapb.compiler.Version.scalapbVersion % "protobuf"
   val scalapbRuntimeLib   = "com.thesamet.scalapb"       %% "scalapb-runtime"           % scalapb.compiler.Version.scalapbVersion
