@@ -77,7 +77,7 @@ object Dependencies {
   val scalatest           = "org.scalatest"              %% "scalatest"                 % "3.0.5" % "test"
   val scallop             = "org.rogach"                 %% "scallop"                   % "3.1.4"
   val scodecCore          = "org.scodec"                 %% "scodec-core"               % "1.11.7"
-  val scodecCats          = "org.scodec"                 %% "scodec-cats"               % "1.1.0-M2"
+  val scodecCats          = "org.scodec"                 %% "scodec-cats"               % "1.1.0-M4"
   val scodecBits          = "org.scodec"                 %% "scodec-bits"               % "1.1.23"
   // see https://jitpack.io/#rchain/secp256k1-java
   val secp256k1Java       = "com.github.rchain"           % "secp256k1-java"            % "0.1"
