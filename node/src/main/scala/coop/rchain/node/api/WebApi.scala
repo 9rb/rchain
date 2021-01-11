@@ -17,6 +17,7 @@ import coop.rchain.models.GUnforgeable.UnfInstance.{GDeployIdBody, GDeployerIdBo
 import coop.rchain.models._
 import coop.rchain.node.api.WebApi._
 import coop.rchain.shared.Log
+import coop.rchain.state.StateManager
 
 trait WebApi[F[_]] {
   def status: F[ApiStatus]
@@ -55,7 +56,8 @@ object WebApi {
 
   class WebApiImpl[F[_]: Sync: Concurrent: EngineCell: Log: Span: SafetyOracle: BlockStore](
       apiMaxBlocksLimit: Int,
-      devMode: Boolean = false
+      devMode: Boolean = false,
+      stateManager: StateManager[F]
   ) extends WebApi[F] {
     import WebApiSyntax._
 
@@ -127,10 +129,11 @@ object WebApi {
   // Rholang terms interesting for translation to JSON
 
   sealed trait RhoExpr
-  // Nested expressions
+  // Nested expressions (Par, Tuple, List and Set are converted to JSON list)
   final case class ExprPar(data: List[RhoExpr])        extends RhoExpr
-  final case class ExprList(data: List[RhoExpr])       extends RhoExpr
   final case class ExprTuple(data: List[RhoExpr])      extends RhoExpr
+  final case class ExprList(data: List[RhoExpr])       extends RhoExpr
+  final case class ExprSet(data: List[RhoExpr])        extends RhoExpr
   final case class ExprMap(data: Map[String, RhoExpr]) extends RhoExpr
   // Terminal expressions (here is the data)
   final case class ExprBool(data: Boolean)  extends RhoExpr
@@ -264,6 +267,9 @@ object WebApi {
     // List
     else if (exp.exprInstance.isEListBody)
       ExprList(exp.getEListBody.ps.flatMap(exprFromParProto).toList).some
+    // Set
+    else if (exp.exprInstance.isESetBody)
+      ExprSet(exp.getESetBody.ps.flatMap(exprFromParProto).toList).some
     // Map
     else if (exp.exprInstance.isEMapBody) {
       val fields = for {
@@ -271,8 +277,17 @@ object WebApi {
         keyExpr <- exprFromParProto(k)
         key <- keyExpr match {
                 case ExprString(str) => str.some
-                case ExprBytes(str)  => str.some
-                case _               => none
+                case ExprInt(num)    => num.toString.some
+                case ExprBool(bool)  => bool.toString.some
+                case ExprUri(uri)    => uri.some
+                case ExprUnforg(unforg) =>
+                  unforg match {
+                    case UnforgPrivate(hex)  => hex.some
+                    case UnforgDeploy(hex)   => hex.some
+                    case UnforgDeployer(hex) => hex.some
+                  }
+                case ExprBytes(hex) => hex.some
+                case _              => none
               }
         value <- exprFromParProto(v)
       } yield (key, value)
