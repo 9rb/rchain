@@ -6,16 +6,16 @@ object Dependencies {
 
   val circeVersion      = "0.13.0"
   val enumeratumVersion = "1.5.13"
-  val http4sVersion     = "0.21.9"
+  val http4sVersion     = "0.21.15"
   val kamonVersion      = "1.1.5"
-  val catsVersion       = "2.2.0"
-  val catsEffectVersion = "2.2.0"
+  val catsVersion       = "2.3.1"
+  val catsEffectVersion = "2.3.1"
   val catsMtlVersion    = "0.7.1"
   val slf4jVersion      = "1.7.25"
 
   // format: off
-  val bouncyProvCastle    = "org.bouncycastle"            % "bcprov-jdk15on"            % "1.67"
-  val bouncyPkixCastle    = "org.bouncycastle"            % "bcpkix-jdk15on"            % "1.67"
+  val bouncyProvCastle    = "org.bouncycastle"            % "bcprov-jdk15on"            % "1.68"
+  val bouncyPkixCastle    = "org.bouncycastle"            % "bcpkix-jdk15on"            % "1.68"
   val catsCore            = "org.typelevel"              %% "cats-core"                 % catsVersion
   val catsLawsTest        = "org.typelevel"              %% "cats-laws"                 % catsVersion % "test"
   val catsLawsTestkitTest = "org.typelevel"              %% "cats-testkit"              % catsVersion % "test"
@@ -23,16 +23,16 @@ object Dependencies {
   val catsEffectLawsTest  = "org.typelevel"              %% "cats-effect-laws"          % catsEffectVersion % "test"
   val catsMtl             = "org.typelevel"              %% "cats-mtl-core"             % catsMtlVersion
   val catsMtlLawsTest     = "org.typelevel"              %% "cats-mtl-laws"             % catsMtlVersion % "test"
-  val catsRetry           = "com.github.cb372"           %% "cats-retry"                % "2.0.0"
+  val catsRetry           = "com.github.cb372"           %% "cats-retry"                % "2.1.0"
   val catsTagless         = "org.typelevel"              %% "cats-tagless-macros"       % "0.12"
   val circeCore           = "io.circe"                   %% "circe-core"                % circeVersion
   val circeGeneric        = "io.circe"                   %% "circe-generic"             % circeVersion
   val circeGenericExtras  = "io.circe"                   %% "circe-generic-extras"      % circeVersion
   val circeLiteral        = "io.circe"                   %% "circe-literal"             % circeVersion
   val circeParser         = "io.circe"                   %% "circe-parser"              % circeVersion
-  val disciplineCore      = "org.typelevel"              %% "discipline-core"           % "1.1.2"
+  val disciplineCore      = "org.typelevel"              %% "discipline-core"           % "1.1.3"
   val enumeratum          = "com.beachape"               %% "enumeratum"                % enumeratumVersion
-  val fs2Core             = "co.fs2"                     %% "fs2-core"                  % "2.4.4"
+  val fs2Core             = "co.fs2"                     %% "fs2-core"                  % "2.5.0"
   val guava               = "com.google.guava"            % "guava"                     % "30.0-jre"
   val hasher              = "com.roundeights"            %% "hasher"                    % "1.2.0"
   val http4sBlazeClient   = "org.http4s"                 %% "http4s-blaze-client"       % http4sVersion
@@ -54,14 +54,14 @@ object Dependencies {
     .intransitive() //we only use the lib for one util class (org.lightningj.util.ZBase32) that has no dependencies
   val lmdbjava            = "org.lmdbjava"                % "lmdbjava"                  % "0.8.1"
   val logbackClassic      = "ch.qos.logback"              % "logback-classic"           % "1.2.3"
-  val logstashLogback     = "net.logstash.logback"        % "logstash-logback-encoder"  % "5.3"
+  val logstashLogback     = "net.logstash.logback"        % "logstash-logback-encoder"  % "6.6"
   val lz4                 = "org.lz4"                     % "lz4-java"                  % "1.7.1"
   val magnolia            = "com.propensive"             %% "magnolia"                  % "0.12.0"
   val monix               = "io.monix"                   %% "monix"                     % "3.3.0"
   val pureconfig          = "com.github.pureconfig"      %% "pureconfig"                % "0.14.0"
   val scalaLogging        = "com.typesafe.scala-logging" %% "scala-logging"             % "3.9.2"
   val scalaUri            = "io.lemonlabs"               %% "scala-uri"                 % "3.0.0"
-  val scalacheck          = "org.scalacheck"             %% "scalacheck"                % "1.15.1"
+  val scalacheck          = "org.scalacheck"             %% "scalacheck"                % "1.15.2"
   val scalacheckShapeless = "com.github.alexarchambault" %% "scalacheck-shapeless_1.14" % "1.2.5" % "test"
   val scalactic           = "org.scalactic"              %% "scalactic"                 % "3.0.5" % "test"
   val scalapbCompiler     = "com.thesamet.scalapb"       %% "compilerplugin"            % scalapb.compiler.Version.scalapbVersion
@@ -77,8 +77,8 @@ object Dependencies {
   val scalatest           = "org.scalatest"              %% "scalatest"                 % "3.0.5" % "test"
   val scallop             = "org.rogach"                 %% "scallop"                   % "3.1.4"
   val scodecCore          = "org.scodec"                 %% "scodec-core"               % "1.11.7"
-  val scodecCats          = "org.scodec"                 %% "scodec-cats"               % "1.1.0-M4"
-  val scodecBits          = "org.scodec"                 %% "scodec-bits"               % "1.1.21"
+  val scodecCats          = "org.scodec"                 %% "scodec-cats"               % "1.1.0-M2"
+  val scodecBits          = "org.scodec"                 %% "scodec-bits"               % "1.1.23"
   // see https://jitpack.io/#rchain/secp256k1-java
   val secp256k1Java       = "com.github.rchain"           % "secp256k1-java"            % "0.1"
   val shapeless           = "com.chuusai"                %% "shapeless"                 % "2.3.3"
@@ -96,6 +96,9 @@ object Dependencies {
     scalacheck,
     scodecBits,
     shapeless,
+    // Added to resolve conflicts with kamon, cats, http4s
+    slf4j,
+    "org.typelevel"          % "jawn-parser_2.12"         % "1.0.0",
     // Added to resolve conflicts in scalapb plugin v0.10.8
     "org.codehaus.mojo"      % "animal-sniffer-annotations" % "1.18",
     "com.google.protobuf"    % "protobuf-java"              % "3.12.0",
