@@ -14,12 +14,13 @@ import coop.rchain.blockstorage._
 import coop.rchain.blockstorage.casperbuffer.CasperBufferKeyValueStorage
 import coop.rchain.blockstorage.dag.{BlockDagFileStorage, BlockDagKeyValueStorage}
 import coop.rchain.blockstorage.deploy.LMDBDeployStorage
-import coop.rchain.blockstorage.finality.LastFinalizedFileStorage
+import coop.rchain.blockstorage.finality.{LastFinalizedFileStorage, LastFinalizedKeyValueStorage}
 import coop.rchain.blockstorage.util.io.IOError
 import coop.rchain.casper.engine.EngineCell._
 import coop.rchain.casper.engine.{BlockRetriever, _}
 import coop.rchain.casper.protocol.deploy.v1.DeployServiceV1GrpcMonix
 import coop.rchain.casper.protocol.propose.v1.ProposeServiceV1GrpcMonix
+import coop.rchain.casper.state.instances.BlockStateManagerImpl
 import coop.rchain.casper.storage.RNodeKeyValueStoreManager
 import coop.rchain.casper.util.comm._
 import coop.rchain.casper.util.rholang.RuntimeManager
@@ -51,10 +52,12 @@ import coop.rchain.node.diagnostics.{
 }
 import coop.rchain.node.effects.{EventConsumer, RchainEvents}
 import coop.rchain.node.model.repl.ReplGrpcMonix
+import coop.rchain.node.state.instances.RNodeStateManagerImpl
 import coop.rchain.node.web._
 import coop.rchain.p2p.effects._
 import coop.rchain.rholang.interpreter.Runtime
 import coop.rchain.rspace.Context
+import coop.rchain.rspace.state.instances.RSpaceStateManagerImpl
 import coop.rchain.shared._
 import coop.rchain.shared.syntax._
 import coop.rchain.store.KeyValueStoreManager
@@ -774,7 +777,19 @@ object NodeRuntime {
         // Start block storage
         if (oldBlockStoreExists) oldStorage else KeyValueBlockStore()
       }
-
+      // Last finalized Block storage
+      lastFinalizedStorage <- {
+        for {
+          lastFinalizedBlockDb   <- casperStoreManager.store("last-finalized-block")
+          lastFinalizedIsEmpty   = lastFinalizedBlockDb.iterate(_.isEmpty)
+          oldLastFinalizedExists = Sync[F].delay(Files.exists(lastFinalizedPath))
+          shouldMigrate          <- lastFinalizedIsEmpty &&^ oldLastFinalizedExists
+          lastFinalizedStore     = LastFinalizedKeyValueStorage(lastFinalizedBlockDb)
+          _ <- LastFinalizedKeyValueStorage
+                .importFromFileStorage(lastFinalizedPath, lastFinalizedStore)
+                .whenA(shouldMigrate)
+        } yield lastFinalizedStore
+      }
       // Block DAG storage
       blockDagStorage <- {
         implicit val kvm = casperStoreManager
@@ -794,7 +809,6 @@ object NodeRuntime {
         implicit val kvm = casperStoreManager
         CasperBufferKeyValueStorage.create[F]
       }
-      lastFinalizedStorage                  <- LastFinalizedFileStorage.make[F](lastFinalizedPath)
       deployStorageAllocation               <- LMDBDeployStorage.make[F](deployStorageConfig).allocated
       (deployStorage, deployStorageCleanup) = deployStorageAllocation
       oracle = {
@@ -810,8 +824,14 @@ object NodeRuntime {
           conf.casper.faultToleranceThreshold
         )
       }
+      estimator = {
+        implicit val sp = span
+        Estimator[F](conf.casper.maxNumberOfParents, conf.casper.maxParentDepth)
+      }
       synchronyConstraintChecker = {
         implicit val bs = blockStore
+        implicit val es = estimator
+        implicit val sp = span
         SynchronyConstraintChecker[F](
           conf.casper.synchronyConstraintThreshold
         )
@@ -823,10 +843,6 @@ object NodeRuntime {
           conf.casper.heightConstraintThreshold
         )
       }
-      estimator = {
-        implicit val sp = span
-        Estimator[F](conf.casper.maxNumberOfParents, conf.casper.maxParentDepth)
-      }
       evalRuntime <- {
         implicit val s  = rspaceScheduler
         implicit val sp = span
@@ -835,7 +851,7 @@ object NodeRuntime {
         }
       }
       _ <- Runtime.bootstrapRegistry[F](evalRuntime)
-      casperRuntimeAndReporter <- {
+      casperInitialized <- {
         implicit val s  = rspaceScheduler
         implicit val sp = span
         implicit val bs = blockStore
@@ -859,14 +875,25 @@ object NodeRuntime {
                        } yield ReportingCasper.rhoReporter(hr, reportingCache)
                      } else
                        ReportingCasper.noop.pure[F]
-        } yield (runtime, reporter)
+        } yield (runtime, reporter, hr)
       }
-      (casperRuntime, reportingCasper) = casperRuntimeAndReporter
+      (casperRuntime, reportingCasper, historyRepo) = casperInitialized
       runtimeManager <- {
         implicit val sp = span
         RuntimeManager.fromRuntime[F](casperRuntime)
       }
-
+      // RNodeStateManager
+      stateManagers <- {
+        for {
+          exporter           <- historyRepo.exporter
+          importer           <- historyRepo.importer
+          rspaceStateManager = RSpaceStateManagerImpl(exporter, importer)
+          blockStateManager  = BlockStateManagerImpl(blockStore, blockDagStorage)
+          rnodeStateManager  = RNodeStateManagerImpl(rspaceStateManager, blockStateManager)
+        } yield (rnodeStateManager, rspaceStateManager)
+      }
+      (rnodeStateManager, rspaceStateManager) = stateManagers
+      // Engine dynamic reference
       engineCell   <- EngineCell.init[F]
       envVars      = EnvVars.envVars[F]
       raiseIOError = IOError.raiseIOErrorThroughSync[F]
@@ -892,8 +919,13 @@ object NodeRuntime {
         implicit val es     = estimator
         implicit val ds     = deployStorage
         implicit val cbs    = casperBufferStorage
+        implicit val rsm    = rspaceStateManager
 
-        CasperLaunch.of[F](conf.casper)
+        CasperLaunch.of[F](
+          conf.casper,
+          !conf.protocolClient.disableLfs,
+          conf.protocolServer.disableStateExporter
+        )
       }
       packetHandler = {
         implicit val ec = engineCell
@@ -962,14 +994,14 @@ object NodeRuntime {
         implicit val sp = span
         implicit val or = oracle
         implicit val bs = blockStore
-        new WebApiImpl[F](conf.apiServer.maxBlocksLimit, conf.devMode)
+        new WebApiImpl[F](conf.apiServer.maxBlocksLimit, conf.devMode, rnodeStateManager)
       }
       adminWebApi = {
         implicit val ec     = engineCell
         implicit val sp     = span
         implicit val sc     = synchronyConstraintChecker
         implicit val lfhscc = lastFinalizedHeightConstraintChecker
-        new AdminWebApiImpl[F](blockApiLock)
+        new AdminWebApiImpl[F](blockApiLock, rnodeStateManager)
       }
     } yield (
       blockStore,
