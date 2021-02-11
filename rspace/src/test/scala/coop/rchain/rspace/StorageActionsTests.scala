@@ -10,15 +10,15 @@ import coop.rchain.rspace.util._
 import coop.rchain.rspace.internal._
 import coop.rchain.rspace.history.History._
 import coop.rchain.shared.Serialize
-import org.scalatest.prop.{Checkers, GeneratorDrivenPropertyChecks}
 import scodec.Codec
 import monix.eval.Task
 
 import scala.collection.SortedSet
+import org.scalatestplus.scalacheck.{Checkers, ScalaCheckDrivenPropertyChecks}
 
 trait StorageActionsTests[F[_]]
     extends StorageTestsBase[F, String, Pattern, String, StringsCaptor]
-    with GeneratorDrivenPropertyChecks
+    with ScalaCheckDrivenPropertyChecks
     with Checkers {
 
   implicit override val generatorDrivenConfig =

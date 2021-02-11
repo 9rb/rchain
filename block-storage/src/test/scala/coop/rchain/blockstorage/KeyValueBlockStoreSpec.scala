@@ -18,10 +18,10 @@ import coop.rchain.shared.ByteVectorOps.RichByteVector
 import coop.rchain.store.KeyValueStore
 import monix.eval.Task
 import org.scalacheck.Arbitrary.arbitrary
-import org.scalatest.prop.GeneratorDrivenPropertyChecks
 import org.scalatest.{FlatSpec, Matchers}
+import org.scalatestplus.scalacheck.ScalaCheckDrivenPropertyChecks
 
-class KeyValueBlockStoreSpec extends FlatSpec with Matchers with GeneratorDrivenPropertyChecks {
+class KeyValueBlockStoreSpec extends FlatSpec with Matchers with ScalaCheckDrivenPropertyChecks {
 
   class KV[F[_]: Sync](
       getResult: Option[ByteString],

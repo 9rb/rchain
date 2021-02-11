@@ -13,14 +13,14 @@ import coop.rchain.shared.scalatestcontrib._
 import monix.eval.Task
 import monix.execution.Scheduler.Implicits.global
 import org.scalatest.{BeforeAndAfterAll, EitherValues, FlatSpecLike, Matchers, OptionValues}
-import org.scalatest.prop.GeneratorDrivenPropertyChecks
+import org.scalatestplus.scalacheck.ScalaCheckDrivenPropertyChecks
 
 class LastFinalizedFileStorageTest
     extends FlatSpecLike
     with Matchers
     with OptionValues
     with EitherValues
-    with GeneratorDrivenPropertyChecks
+    with ScalaCheckDrivenPropertyChecks
     with BeforeAndAfterAll {
   implicit val raiseIOError: RaiseIOError[Task] = IOError.raiseIOErrorThroughSync[Task]
 

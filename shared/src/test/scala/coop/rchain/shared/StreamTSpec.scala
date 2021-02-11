@@ -4,11 +4,11 @@ import cats._
 import cats.implicits._
 
 import org.scalatest.{FunSpec, Matchers}
-import org.scalatest.prop.GeneratorDrivenPropertyChecks
 
 import scala.util.{Failure, Success, Try}
+import org.scalatestplus.scalacheck.ScalaCheckDrivenPropertyChecks
 
-class StreamTSpec extends FunSpec with Matchers with GeneratorDrivenPropertyChecks {
+class StreamTSpec extends FunSpec with Matchers with ScalaCheckDrivenPropertyChecks {
   import StreamTSpec._
 
   describe("StreamT") {

@@ -1,9 +1,9 @@
 package coop.rchain.shared
 
 import org.scalatest._
-import org.scalatest.prop.GeneratorDrivenPropertyChecks
+import org.scalatestplus.scalacheck.ScalaCheckDrivenPropertyChecks
 
-class MapOpsSpec extends FlatSpec with Matchers with GeneratorDrivenPropertyChecks {
+class MapOpsSpec extends FlatSpec with Matchers with ScalaCheckDrivenPropertyChecks {
 
   import MapOps._
 

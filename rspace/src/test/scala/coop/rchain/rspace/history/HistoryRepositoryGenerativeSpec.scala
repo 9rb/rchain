@@ -18,7 +18,6 @@ import coop.rchain.rspace.test.ArbitraryInstances.{arbitraryDatumString, _}
 import monix.eval.Task
 import org.scalacheck.{Arbitrary, Gen, Shrink}
 import org.scalatest.{Assertion, BeforeAndAfterAll, FlatSpec, Matchers, OptionValues}
-import org.scalatest.prop.GeneratorDrivenPropertyChecks
 import scodec.Codec
 import monix.execution.Scheduler.Implicits.global
 import cats.implicits._
@@ -29,6 +28,7 @@ import coop.rchain.shared.PathOps._
 import coop.rchain.shared.Serialize
 
 import scala.concurrent.duration._
+import org.scalatestplus.scalacheck.ScalaCheckDrivenPropertyChecks
 
 class LMDBHistoryRepositoryGenerativeSpec
     extends HistoryRepositoryGenerativeDefinition
@@ -94,7 +94,7 @@ abstract class HistoryRepositoryGenerativeDefinition
     extends FlatSpec
     with Matchers
     with OptionValues
-    with GeneratorDrivenPropertyChecks {
+    with ScalaCheckDrivenPropertyChecks {
 
   implicit val codecString: Codec[String]   = implicitly[Serialize[String]].toSizeHeadCodec
   implicit val codecP: Codec[Pattern]       = implicitly[Serialize[Pattern]].toSizeHeadCodec

@@ -1,11 +1,11 @@
 package coop.rchain.shared
-import org.scalatest.prop.GeneratorDrivenPropertyChecks
 import org.scalatest.{FunSpec, Matchers}
 import org.scalacheck.Gen
 
 import scala.util.Random
+import org.scalatestplus.scalacheck.ScalaCheckDrivenPropertyChecks
 
-class CompressionSpec extends FunSpec with Matchers with GeneratorDrivenPropertyChecks {
+class CompressionSpec extends FunSpec with Matchers with ScalaCheckDrivenPropertyChecks {
   val byteArrays =
     for (n <- Gen.choose(10, 500000))
       yield Array.fill(n)((Random.nextInt(256) - 128).toByte)
