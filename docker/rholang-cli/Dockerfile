@@ -5,7 +5,7 @@
 #
 # This file is licensed under the Apache License, version 2.0.
 
-FROM ubuntu:16.04
+FROM ubuntu:xenial-20210114
 
 RUN dpkg --add-architecture i386
 RUN apt-get update && apt-get install -y openjdk-8-jre-headless libstdc++6:i386
